@@ -1,0 +1,2 @@
+-r requirements.txt
+tox==2.8.2

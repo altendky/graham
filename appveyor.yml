@@ -13,7 +13,14 @@ init:
 install:
   - "%PYTHON%\\Scripts\\pip install --user virtualenv"
   - "%PYTHON%\\Scripts\\virtualenv -p \"%PYTHON%\\python.exe\" \"%VENV%\""
-  - "%VENV_PYTHON% -m pip install tox"
+  - "%VENV_PYTHON% -m pip install -r requirements.build"
+  - "%VENV_PYTHON% -m pip install -r requirements.test"
 
 build_script:
+  - "%VENV_PYTHON% setup.py bdist_wheel"
+
+test_script:
   - "%VENV_PYTHON% -m tox"
+
+artifacts:
+  - path: "dist\\*.whl"
