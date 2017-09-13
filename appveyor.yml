@@ -12,7 +12,7 @@ init:
 
 install:
   - "%PYTHON%\\Scripts\\pip install --user virtualenv"
-  - "%PYTHON%\\Scripts\\virtualenv -p \"%PYTHON%\\Scripts\\python.exe\" \"%VENV%\""
+  - "%PYTHON%\\Scripts\\virtualenv -p \"%PYTHON%\\python.exe\" \"%VENV%\""
   - "%VENV_PYTHON% -m pip install tox"
 
 test_script:
