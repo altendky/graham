@@ -16,4 +16,4 @@ install:
   - "%VENV_PYTHON% -m pip install tox"
 
 test_script:
-  - "%VENV_BIN% -m tox"
+  - "%VENV_PYTHON% -m tox"
