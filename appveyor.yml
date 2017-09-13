@@ -15,5 +15,5 @@ install:
   - "%PYTHON%\\Scripts\\virtualenv -p \"%PYTHON%\\python.exe\" \"%VENV%\""
   - "%VENV_PYTHON% -m pip install tox"
 
-test_script:
+build_script:
   - "%VENV_PYTHON% -m tox"
