@@ -1,10 +1,11 @@
-matrix:
-  global:
-    - VENV: "%APPVEYOR_BUILD_FOLDER%\\..\\venv"
-    - VENV_BIN: "%VENV%\\Scripts"
-    - VENV_PYTHON: "%VENV_BIN%\\python"
-  - TOXENV: py36
-    PYTHON: "C:\\Python36-x64"
+environment:
+  matrix:
+    global:
+      - VENV: "%APPVEYOR_BUILD_FOLDER%\\..\\venv"
+      - VENV_BIN: "%VENV%\\Scripts"
+      - VENV_PYTHON: "%VENV_BIN%\\python"
+    - TOXENV: py36
+      PYTHON: "C:\\Python36-x64"
 
 init:
   - echo "TOXENV: %TOXENV%"
