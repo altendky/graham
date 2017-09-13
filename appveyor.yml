@@ -11,9 +11,9 @@ init:
   - echo "TOXENV- %TOXENV%"
 
 install:
-  - "%PYTHON%\\Scripts\\pip" install --user virtualenv
-  - "%PYTHON%\\Scripts\\virtualenv" -p "%PYTHON%\\Scripts\\python" "%VENV%"
-  - "%VENV_PYTHON%" -m pip install tox
+  - "%PYTHON%\\Scripts\\pip install --user virtualenv"
+  - "%PYTHON%\\Scripts\\virtualenv -p \"%PYTHON%\\Scripts\\python\" \"%VENV%\""
+  - "%VENV_PYTHON% -m pip install tox"
 
 test_script:
-  - "%VENV_BIN%" -m tox
+  - "%VENV_BIN% -m tox"
