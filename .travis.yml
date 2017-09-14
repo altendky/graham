@@ -7,9 +7,9 @@ python:
 
 install:
   - pip install tox-travis
+  - python -m pip install -r requirements.build
+  - python -m pip install -r requirements.test
 
 script:
-  - python -m pip install -r requirements.build
   - python setup.py bdist_wheel
-  - python -m pip install -r requirements.test
   - tox
