@@ -16,6 +16,7 @@ install:
   - "%VENV_PYTHON% -m pip install -r requirements.txt"
   - "%VENV_PYTHON% -m pip install ."
   - ps: echo $Env:VENV_PYTHON
+  - ps: $Env:VENV_PYTHON --version
   - ps: Update-AppveyorBuild -Version "v$($Env:VENV_PYTHON -c 'import graham; print(graham.__version__, end=\"\")') b$Env:APPVEYOR_BUILD_NUMBER"
   - "%VENV_PYTHON% -m pip install -r requirements.build"
   - "%VENV_PYTHON% -m pip install -r requirements.test"
