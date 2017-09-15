@@ -3,7 +3,7 @@ import setuptools
 
 setuptools.setup(
     name='graham',
-    use_scm_version=True,
+    use_scm_version={'version_scheme': 'post-release'},
     description='Graham, bringing together attrs and marshmallow.',
     author='Kyle Altendorf',
     author_email='sda@fstab.net',
