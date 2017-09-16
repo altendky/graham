@@ -5,6 +5,12 @@ sudo: false
 python:
   - 3.6
 
+addons:
+  artifacts:
+    s3_region: $ARTIFACTS_REGION
+    paths:
+      - $(ls $TRAVIS_BUILD_DIR/dist/*.whl | tr "\n" ":")
+
 install:
   - pip install tox-travis
   - python -m pip install -r requirements.build
