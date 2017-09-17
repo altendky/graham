@@ -24,6 +24,7 @@ build_script:
 
 test_script:
   - "%VENV_PYTHON% -m tox"
+  - "%VENV_BIN%\\codecov"
 
 artifacts:
   - path: "dist\\*.whl"
