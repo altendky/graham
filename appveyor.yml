@@ -26,6 +26,7 @@ test_script:
   - "%VENV_BIN%\\tox"
   - "%VENV_BIN%\\coverage combine tests\\.coverage"
   - "%VENV_BIN%\\codecov"
+  - tree
 
 artifacts:
   - path: "dist\\*.whl"
