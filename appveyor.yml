@@ -1,7 +1,5 @@
 environment:
-  VENV: "%APPVEYOR_BUILD_FOLDER%\\..\\venv"
-  VENV_BIN: "%VENV%\\Scripts"
-  VENV_PYTHON: "%VENV_BIN%\\python"
+  VENV: "%APPVEYOR_BUILD_FOLDER%\\venv"
 
   matrix:
     - TOXENV: py36
@@ -11,23 +9,21 @@ init:
   - echo "TOXENV- %TOXENV%"
 
 install:
-  - "%PYTHON%\\Scripts\\pip install --user virtualenv"
   - "%PYTHON%\\Scripts\\virtualenv -p \"%PYTHON%\\python.exe\" \"%VENV%\""
-  - "%VENV_PYTHON% -m pip install -r requirements.txt"
-  - "%VENV_PYTHON% -m pip install ."
+  - "%VENV%\\Scripts\\activate"
+  - pip install -r requirements.txt
+  - pip install .
   - ps: Update-AppveyorBuild -Version "v$(. $Env:VENV_PYTHON -c 'import graham; print(graham.__version__, end=\"\")') b$Env:APPVEYOR_BUILD_NUMBER"
-  - "%VENV_PYTHON% -m pip install -r requirements.build"
-  - "%VENV_PYTHON% -m pip install -r requirements.test"
-  - "%VENV_BIN%\\activate"
+  - pip install -r requirements.build
+  - pip install -r requirements.test
 
 build_script:
-  - "%VENV_PYTHON% setup.py bdist_wheel"
+  - python setup.py bdist_wheel
 
 test_script:
-  - "%VENV_BIN%\\tox"
-  - "%VENV_BIN%\\coverage combine tests\\.coverage"
-  - "%VENV_BIN%\\codecov"
-  - tree
+  - tox
+  - coverage combine tests\\.coverage
+  - codecov
 
 artifacts:
   - path: "dist\\*.whl"
