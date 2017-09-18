@@ -23,7 +23,7 @@ build_script:
   - "%VENV_PYTHON% setup.py bdist_wheel"
 
 test_script:
-  - "%VENV_PYTHON% -m tox"
+  - "%VENV_BIN%\\tox"
   - "%VENV_BIN%\\codecov"
 
 artifacts:
