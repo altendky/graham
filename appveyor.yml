@@ -24,8 +24,8 @@ build_script:
 
 test_script:
   - "%VENV_BIN%\\tox"
-  - "%VENV_BIN%\\codecov"
   - "%VENV_BIN%\\coverage combine tests\\.coverage"
+  - "%VENV_BIN%\\codecov"
 
 artifacts:
   - path: "dist\\*.whl"
