@@ -20,6 +20,14 @@ setuptools.setup(
         'attrs',
         'marshmallow',
     ],
+    extras_require={
+        'tests': [
+            'codecov',
+            'pytest',
+            'pytest-cov',
+            'tox',
+        ],
+    },
     setup_requires=[
         'setuptools_scm',
     ],
