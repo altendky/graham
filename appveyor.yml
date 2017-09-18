@@ -18,6 +18,7 @@ install:
   - ps: Update-AppveyorBuild -Version "v$(. $Env:VENV_PYTHON -c 'import graham; print(graham.__version__, end=\"\")') b$Env:APPVEYOR_BUILD_NUMBER"
   - "%VENV_PYTHON% -m pip install -r requirements.build"
   - "%VENV_PYTHON% -m pip install -r requirements.test"
+  - "%VENV_BIN%\\activate"
 
 build_script:
   - "%VENV_PYTHON% setup.py bdist_wheel"
