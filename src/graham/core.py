@@ -4,6 +4,10 @@ import marshmallow
 from graham.utils import _dict_strip
 
 
+class MissingMetadata(Exception):
+    pass
+
+
 class UnmatchedTypeError(Exception):
     pass
 
@@ -27,13 +31,23 @@ def create_metadata(*args, **kwargs):
 
 
 def create_schema(cls):
+    include_ = {}
+    for attribute in attr.fields(cls):
+        try:
+            metadata = attribute.metadata[metadata_key]
+        except KeyError as e:
+            raise MissingMetadata(
+                'Metadata not found for {}.{}'.format(
+                    cls.__name__,
+                    attribute.name,
+                ),
+            ) from e
+
+        include_[attribute.name] = metadata.field
+
     class Schema(marshmallow.Schema):
         class Meta:
-            include = {
-                attribute.name: attribute.metadata[
-                    metadata_key].field
-                for attribute in attr.fields(cls)
-            }
+            include = include_
             ordered = True
 
         # TODO: seems like this ought to be a static method
