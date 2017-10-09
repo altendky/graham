@@ -1,8 +1,7 @@
-import functools
-import json
-
 import attr
 import marshmallow
+
+from graham.utils import _dict_strip
 
 
 class UnmatchedTypeError(Exception):
@@ -102,17 +101,6 @@ def type_attribute(name):
 #     attribute.metadata[metadata_key] = field
 #     return attribute
 
-def _strip_leading_underscore(s):
-    return s if s[0] != '_' else s[1:]
-
-
-def _dict_strip(d, keys):
-    return {
-        _strip_leading_underscore(k): v
-        for k, v in d.items()
-        # if k not in keys
-    }
-
 
 def set_type(name):
     def inner(cls):
@@ -121,64 +109,3 @@ def set_type(name):
         return cls
 
     return inner
-
-
-class fields:
-    class MixedList(marshmallow.fields.Field):
-        def __init__(self, *args, **kwargs):
-            fields = kwargs.pop('fields')
-            super().__init__(*args, **kwargs)
-
-            self.instances = []
-
-            for cls_or_instance in fields:
-                if isinstance(cls_or_instance, type):
-                    if not issubclass(cls_or_instance,
-                                      marshmallow.fields.FieldABC):
-                        raise ValueError('The type of the list elements '
-                                         'must be a subclass of '
-                                         'marshmallow.base.FieldABC')
-                    self.instances.append(cls_or_instance())
-                else:
-                    if not isinstance(cls_or_instance,
-                                      marshmallow.fields.FieldABC):
-                        raise ValueError('The instances of the list '
-                                         'elements must be of type '
-                                         'marshmallow.base.FieldABC')
-                    self.instances.append(cls_or_instance)
-
-        def get_cls_or_instance(self, cls_or_instance):
-            if not isinstance(self.instances, dict):
-                instances = {}
-                for instance in self.instances:
-                    if isinstance(instance, marshmallow.fields.Nested):
-                        nested = instance.nested
-                        if isinstance(nested, str):
-                            if nested == marshmallow.fields._RECURSIVE_NESTED:
-                                instances[
-                                    self.parent.type_tag] = self.parent
-                            else:
-                                cls = marshmallow.class_registry.get_class(
-                                    nested)
-                                instances[cls.type_tag] = cls
-                        else:
-                            instances[nested.type_tag] = nested
-                    else:
-                        instances[instance.type_tag] = instance
-
-                self.instances = instances
-
-            # TODO: handle self referential schema definition
-            # self.cls_or_instance['group'] = Group.schema
-
-            return self.instances[cls_or_instance]
-
-        def _serialize(self, value, attr, obj):
-            return [dump(each).data for each in value]
-
-        def _deserialize(self, value, attr, data):
-            return [
-                self.get_cls_or_instance(each[type_attribute_name])
-                    .load(_dict_strip(each, (type_attribute_name,))).data
-                for each in value
-            ]

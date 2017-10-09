@@ -3,7 +3,8 @@ import json
 import attr
 import marshmallow
 
-import graham.core
+import graham
+import graham.fields
 
 
 # Related topics:
@@ -11,59 +12,59 @@ import graham.core
 
 # example and basic test
 
-@graham.core.schemify
+@graham.schemify
 @attr.s
-@graham.core.set_type('leaf')
+@graham.set_type('leaf')
 class Leaf:
     name = attr.ib(
         default='<unnamed leaf>',
         metadata={
-            **graham.core.create_metadata(field=marshmallow.fields.String()),
+            **graham.create_metadata(field=marshmallow.fields.String()),
         }
     )
 
 
-@graham.core.schemify
+@graham.schemify
 @attr.s
-@graham.core.set_type('group')
+@graham.set_type('group')
 class Group:
     name = attr.ib(
         default='<unnamed group>',
-        metadata=graham.core.create_metadata(
+        metadata=graham.create_metadata(
             field=marshmallow.fields.String()
         ),
     )
     groups = attr.ib(
         default=attr.Factory(list),
-        metadata=graham.core.create_metadata(
+        metadata=graham.create_metadata(
             field=marshmallow.fields.Nested('self', many=True)
         ),
     )
     leaves = attr.ib(
         default=attr.Factory(list),
-        metadata=graham.core.create_metadata(
+        metadata=graham.create_metadata(
             field=marshmallow.fields.List(
-                marshmallow.fields.Nested(graham.core.schema(Leaf))
+                marshmallow.fields.Nested(graham.schema(Leaf))
             ),
         ),
     )
 
     mixed_list = attr.ib(
         default=attr.Factory(list),
-        metadata=graham.core.create_metadata(
-            field=graham.core.fields.MixedList(fields=(
+        metadata=graham.create_metadata(
+            field=graham.fields.MixedList(fields=(
                 marshmallow.fields.Nested('Group'),
-                marshmallow.fields.Nested(graham.core.schema(Leaf)),
+                marshmallow.fields.Nested(graham.schema(Leaf)),
             )),
         ),
     )
 
+
 def test_overall():
-    graham.core.register(Group)
+    graham.register(Group)
 
     # Attempt to recreate the List vs. many=True issues
     #   https://repl.it/KFXo/3
-
 
     subgroup = Group(name='subgroup')
     subgroup.leaves.append(Leaf(name='subgroup leaf'))
@@ -74,18 +75,16 @@ def test_overall():
     group.mixed_list.append(Leaf(name='mixed list leaf'))
     group.mixed_list.append(Group(name='mixed list group'))
 
-
     def json_dumps(instance):
         return json.dumps(attr.asdict(instance), indent=4)
-
 
     print(' - - - - - - before')
     print(json_dumps(group))
 
-    marshalled = graham.core.dumps(group)
+    marshalled = graham.dumps(group)
     print()
     print(' - - - - - - serialized type', type(marshalled.data))
-    unmarshalled = graham.core.schema(Group).loads(marshalled.data)
+    unmarshalled = graham.schema(Group).loads(marshalled.data)
     print()
     print(' - - - - - - after')
     print(json_dumps(unmarshalled.data))
