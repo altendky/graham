@@ -9,7 +9,7 @@ import graham
 
 def test_missing_metadata():
     with pytest.raises(graham.core.MissingMetadata, match='Test.test'):
-        @graham.schemify
+        @graham.schemify()
         @attr.s
         @graham.set_type('test')
         class Test:
@@ -17,7 +17,7 @@ def test_missing_metadata():
 
 
 def test_dumps():
-    @graham.schemify
+    @graham.schemify()
     @attr.s
     @graham.set_type('test')
     class Test:

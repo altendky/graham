@@ -12,7 +12,7 @@ import graham.fields
 
 # example and basic test
 
-@graham.schemify
+@graham.schemify()
 @attr.s
 @graham.set_type('leaf')
 class Leaf:
@@ -24,7 +24,7 @@ class Leaf:
     )
 
 
-@graham.schemify
+@graham.schemify()
 @attr.s
 @graham.set_type('group')
 class Group:

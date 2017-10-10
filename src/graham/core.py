@@ -30,7 +30,7 @@ def create_metadata(*args, **kwargs):
     return {metadata_key: Metadata(*args, **kwargs)}
 
 
-def create_schema(cls):
+def create_schema(cls, **kwargs):
     include_ = {}
     for attribute in attr.fields(cls):
         try:
@@ -45,10 +45,15 @@ def create_schema(cls):
 
         include_[attribute.name] = metadata.field
 
+    class Meta_:
+        include = include_
+
+    for k, v in kwargs.items():
+        setattr(Meta_, k, v)
+
     class Schema(marshmallow.Schema):
-        class Meta:
-            include = include_
-            ordered = True
+        class Meta(Meta_):
+            pass
 
         # TODO: seems like this ought to be a static method
         @marshmallow.post_load
@@ -74,11 +79,16 @@ def schema(instance):
     return instance.__graham_graham__.schema
 
 
-def schemify(cls):
-    cls.__graham_graham__ = Attributes(
-        schema=create_schema(cls)())
+def schemify(**kwargs):
+    kwargs.setdefault('ordered', True)
 
-    return cls
+    def inner(cls):
+        cls.__graham_graham__ = Attributes(
+            schema=create_schema(cls=cls, **kwargs)())
+
+        return cls
+
+    return inner
 
 
 def register(cls):
