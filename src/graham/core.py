@@ -79,7 +79,6 @@ def create_schema(cls, tag, options):
             return cls(**data)
 
     Schema.__name__ = cls.__name__ + 'Schema'
-    Schema.type_tag = tag
     Schema._type = marshmallow.fields.Constant(constant=tag)
 
     return Schema

@@ -33,16 +33,17 @@ class MixedList(marshmallow.fields.Field):
                     nested = instance.nested
                     if isinstance(nested, str):
                         if nested == marshmallow.fields._RECURSIVE_NESTED:
-                            instances[
-                                self.parent.type_tag] = self.parent
+                            instances[self.parent.__graham_graham__.type] = (
+                                self.parent
+                            )
                         else:
                             cls = marshmallow.class_registry.get_class(
                                 nested)
-                            instances[cls.type_tag] = cls
+                            instances[cls._type.constant] = cls
                     else:
-                        instances[nested.type_tag] = nested
+                        instances[nested._type.constant] = nested
                 else:
-                    instances[instance.type_tag] = instance
+                    instances[instance._type.constant] = instance
 
             self.instances = instances
 
