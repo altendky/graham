@@ -33,15 +33,16 @@ def create_metadata(*args, **kwargs):
 def create_schema(cls, **kwargs):
     include = {}
     for attribute in attr.fields(cls):
-        try:
-            metadata = attribute.metadata[metadata_key]
-        except KeyError as e:
-            raise MissingMetadata(
-                'Metadata not found for {}.{}'.format(
-                    cls.__name__,
-                    attribute.name,
-                ),
-            ) from e
+        metadata = attribute.metadata.get(metadata_key)
+        if metadata is None:
+            if attribute.default is not attr.NOTHING:
+                continue
+            else:
+                raise MissingMetadata(
+                    'Metadata required for defaultless attribute `{}`'.format(
+                        attribute.name,
+                    ),
+                )
 
         include[attribute.name] = metadata.field
 

@@ -8,12 +8,18 @@ import graham
 
 
 def test_missing_metadata():
-    with pytest.raises(graham.core.MissingMetadata, match='Test.test'):
+    with pytest.raises(graham.core.MissingMetadata, match='`test`'):
         @graham.schemify()
         @attr.s
         @graham.set_type('test')
         class Test:
             test = attr.ib()
+
+    @graham.schemify()
+    @attr.s
+    @graham.set_type('test')
+    class Test:
+        test = attr.ib(default=None)
 
 
 def test_dumps():
@@ -53,3 +59,23 @@ def test_strict():
 
     with pytest.raises(marshmallow.exceptions.ValidationError):
         graham.schema(Test).loads('{"email": "invalid"}')
+
+
+def test_nonserialized():
+    @graham.schemify()
+    @attr.s
+    @graham.set_type('test')
+    class Test:
+        test = attr.ib(
+            metadata=graham.create_metadata(
+                field=marshmallow.fields.String()
+            ),
+        )
+        nope = attr.ib(default=None)
+
+    test = Test(test='test')
+
+    serialized = '{"test": "test", "_type": "test"}'
+
+    assert graham.dumps(test).data == serialized
+    assert graham.schema(Test).loads(serialized).data == test
