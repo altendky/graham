@@ -31,7 +31,7 @@ def create_metadata(*args, **kwargs):
 
 
 def create_schema(cls, **kwargs):
-    include_ = {}
+    include = {}
     for attribute in attr.fields(cls):
         try:
             metadata = attribute.metadata[metadata_key]
@@ -43,17 +43,17 @@ def create_schema(cls, **kwargs):
                 ),
             ) from e
 
-        include_[attribute.name] = metadata.field
-
-    class Meta_:
-        include = include_
-
-    for k, v in kwargs.items():
-        setattr(Meta_, k, v)
+        include[attribute.name] = metadata.field
 
     class Schema(marshmallow.Schema):
-        class Meta(Meta_):
-            pass
+        Meta = type(
+            'Meta',
+            (),
+            {
+                'include': include,
+                **kwargs,
+            }
+        )
 
         # TODO: seems like this ought to be a static method
         @marshmallow.post_load
