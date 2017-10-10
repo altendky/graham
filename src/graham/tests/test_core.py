@@ -38,3 +38,18 @@ def test_dumps():
         "test": "test",
         "_type": "test"
     }''')
+
+
+def test_strict():
+    @graham.schemify(strict=True)
+    @attr.s
+    @graham.set_type('test')
+    class Test:
+        email = attr.ib(
+            metadata=graham.create_metadata(
+                field=marshmallow.fields.Email()
+            ),
+        )
+
+    with pytest.raises(marshmallow.exceptions.ValidationError):
+        graham.schema(Test).loads('{"email": "invalid"}')

@@ -81,6 +81,7 @@ def schema(instance):
 
 def schemify(**kwargs):
     kwargs.setdefault('ordered', True)
+    kwargs.setdefault('strict', True)
 
     def inner(cls):
         cls.__graham_graham__ = Attributes(
