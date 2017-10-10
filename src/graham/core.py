@@ -82,7 +82,7 @@ def schemify(cls):
 
 
 def register(cls):
-    marshmallow.class_registry.register('Group', schema(cls))
+    marshmallow.class_registry.register(cls.__name__, schema(cls))
 
 
 def type_attribute(name):
