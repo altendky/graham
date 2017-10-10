@@ -12,9 +12,8 @@ import graham.fields
 
 # example and basic test
 
-@graham.schemify()
+@graham.schemify(tag='leaf')
 @attr.s
-@graham.set_type('leaf')
 class Leaf:
     name = attr.ib(
         default='<unnamed leaf>',
@@ -24,9 +23,8 @@ class Leaf:
     )
 
 
-@graham.schemify()
+@graham.schemify(tag='group')
 @attr.s
-@graham.set_type('group')
 class Group:
     name = attr.ib(
         default='<unnamed group>',

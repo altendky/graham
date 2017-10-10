@@ -9,23 +9,20 @@ import graham
 
 def test_missing_metadata():
     with pytest.raises(graham.core.MissingMetadata, match='`test`'):
-        @graham.schemify()
+        @graham.schemify(tag='test')
         @attr.s
-        @graham.set_type('test')
         class Test:
             test = attr.ib()
 
-    @graham.schemify()
+    @graham.schemify(tag='test')
     @attr.s
-    @graham.set_type('test')
     class Test:
         test = attr.ib(default=None)
 
 
 def test_dumps():
-    @graham.schemify()
+    @graham.schemify(tag='test')
     @attr.s
-    @graham.set_type('test')
     class Test:
         test = attr.ib(
             metadata=graham.create_metadata(
@@ -47,9 +44,8 @@ def test_dumps():
 
 
 def test_strict():
-    @graham.schemify(strict=True)
+    @graham.schemify(tag='test', strict=True)
     @attr.s
-    @graham.set_type('test')
     class Test:
         email = attr.ib(
             metadata=graham.create_metadata(
@@ -62,9 +58,8 @@ def test_strict():
 
 
 def test_nonserialized():
-    @graham.schemify()
+    @graham.schemify(tag='test')
     @attr.s
-    @graham.set_type('test')
     class Test:
         test = attr.ib(
             metadata=graham.create_metadata(

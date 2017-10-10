@@ -14,5 +14,4 @@ from graham.core import (
     register,
     schema,
     schemify,
-    set_type,
 )

@@ -1,3 +1,5 @@
+import collections
+
 import attr
 import marshmallow
 
@@ -15,6 +17,7 @@ class UnmatchedTypeError(Exception):
 @attr.s
 class Attributes:
     schema = attr.ib()
+    type = attr.ib()
 
 
 metadata_key = object()
@@ -30,8 +33,8 @@ def create_metadata(*args, **kwargs):
     return {metadata_key: Metadata(*args, **kwargs)}
 
 
-def create_schema(cls, **kwargs):
-    include = {}
+def create_schema(cls, tag, options):
+    include = collections.OrderedDict()
     for attribute in attr.fields(cls):
         metadata = attribute.metadata.get(metadata_key)
         if metadata is None:
@@ -46,24 +49,38 @@ def create_schema(cls, **kwargs):
 
         include[attribute.name] = metadata.field
 
+    include['_type'] = marshmallow.fields.Constant(constant=tag)
+
     class Schema(marshmallow.Schema):
         Meta = type(
             'Meta',
             (),
             {
                 'include': include,
-                **kwargs,
+                **options,
             }
         )
 
         # TODO: seems like this ought to be a static method
         @marshmallow.post_load
         def deserialize(self, data):
-            # print(cls, data, attr.fields(cls))
-            return cls(**_dict_strip(data, (type_attribute_name,)))
+            type_ = data.pop(type_attribute_name)
+            if type_ != cls.__graham_graham__.type:
+                raise UnmatchedTypeError(
+                    '{class_name}.{attribute_name} should be `{default}` '
+                    'but `{actual}` received'.format(
+                        class_name=type(self).__name__,
+                        attribute_name=type_attribute_name,
+                        default=cls.__graham_graham__.type,
+                        actual=type_,
+                    )
+                )
+
+            return cls(**data)
 
     Schema.__name__ = cls.__name__ + 'Schema'
-    Schema.type_tag = getattr(attr.fields(cls), type_attribute_name).default
+    Schema.type_tag = tag
+    Schema._type = marshmallow.fields.Constant(constant=tag)
 
     return Schema
 
@@ -80,13 +97,19 @@ def schema(instance):
     return instance.__graham_graham__.schema
 
 
-def schemify(**kwargs):
-    kwargs.setdefault('ordered', True)
-    kwargs.setdefault('strict', True)
+def schemify(tag, **marshmallow_options):
+    marshmallow_options.setdefault('ordered', True)
+    marshmallow_options.setdefault('strict', True)
 
     def inner(cls):
         cls.__graham_graham__ = Attributes(
-            schema=create_schema(cls=cls, **kwargs)())
+            schema=create_schema(
+                cls=cls,
+                tag=tag,
+                options=marshmallow_options,
+            )(),
+            type=tag,
+        )
 
         return cls
 
@@ -97,41 +120,7 @@ def register(cls):
     marshmallow.class_registry.register(cls.__name__, schema(cls))
 
 
-def type_attribute(name):
-    def validate(instance, attribute, value):
-        # TODO: probably just really an unneeded double check since the
-        # type is picked based on the type in the dict anyways...
-        if value != attribute.default:
-            raise UnmatchedTypeError(
-                '{class_name}.{attribute_name} should be `{default}` '
-                'but `{actual}` received'.format(
-                    class_name=type(instance).__name__,
-                    attribute_name=attribute.name,
-                    default=attribute.default,
-                    actual=value,
-                )
-            )
-
-    return attr.ib(
-        default=name,
-        # init=False,
-        validator=validate,
-        metadata={
-            **create_metadata(marshmallow.fields.String()),
-        }
-    )
-
-
 # TODO: somehow confuses the schema completely
 # def attrib(attribute, field):
 #     attribute.metadata[metadata_key] = field
 #     return attribute
-
-
-def set_type(name):
-    def inner(cls):
-        setattr(cls, type_attribute_name, type_attribute(name))
-
-        return cls
-
-    return inner
