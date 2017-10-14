@@ -74,3 +74,24 @@ def test_nonserialized():
 
     assert graham.dumps(test).data == serialized
     assert graham.schema(Test).loads(serialized).data == test
+
+
+def test_load_from_dump_to():
+    @graham.schemify(tag='test')
+    @attr.s
+    class Test:
+        test = attr.ib(
+            metadata=graham.create_metadata(
+                field=marshmallow.fields.String(
+                    load_from='test_load_dump',
+                    dump_to='test_load_dump',
+                )
+            ),
+        )
+
+    test = Test(test='test string')
+
+    serialized = '{"test_load_dump": "test string", "_type": "test"}'
+
+    assert graham.dumps(test).data == serialized
+    assert graham.schema(Test).loads(serialized).data == test
