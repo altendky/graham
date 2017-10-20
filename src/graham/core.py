@@ -61,6 +61,8 @@ def create_schema(cls, tag, options):
             }
         )
 
+        data_class = cls
+
         # TODO: seems like this ought to be a static method
         @marshmallow.post_load
         def deserialize(self, data):
