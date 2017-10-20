@@ -4,7 +4,7 @@ import setuptools
 setuptools.setup(
     name='graham',
     use_scm_version={'version_scheme': 'post-release'},
-    description='Graham, bringing together attrs and marshmallow.',
+    description="Graham, making s'mores with attrs and marshmallow.",
     author='Kyle Altendorf',
     author_email='sda@fstab.net',
     url='https://github.com/altendky/graham',
