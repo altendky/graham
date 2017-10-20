@@ -35,6 +35,8 @@ def create_metadata(*args, **kwargs):
 
 def create_schema(cls, tag, options):
     include = collections.OrderedDict()
+    include['_type'] = marshmallow.fields.Constant(constant=tag)
+
     for attribute in attr.fields(cls):
         metadata = attribute.metadata.get(metadata_key)
         if metadata is None:
@@ -48,8 +50,6 @@ def create_schema(cls, tag, options):
                 )
 
         include[attribute.name] = metadata.field
-
-    include['_type'] = marshmallow.fields.Constant(constant=tag)
 
     class Schema(marshmallow.Schema):
         Meta = type(

@@ -33,13 +33,13 @@ def test_dumps():
     test = Test(test='test')
 
     raw = graham.core.dumps(test).data
-    assert raw == '{"test": "test", "_type": "test"}'
+    assert raw == '{"_type": "test", "test": "test"}'
 
     indented = graham.core.dumps(test, indent=4).data
     assert indented == textwrap.dedent('''\
     {
-        "test": "test",
-        "_type": "test"
+        "_type": "test",
+        "test": "test"
     }''')
 
 
@@ -70,7 +70,7 @@ def test_nonserialized():
 
     test = Test(test='test')
 
-    serialized = '{"test": "test", "_type": "test"}'
+    serialized = '{"_type": "test", "test": "test"}'
 
     assert graham.dumps(test).data == serialized
     assert graham.schema(Test).loads(serialized).data == test
@@ -91,7 +91,7 @@ def test_load_from_dump_to():
 
     test = Test(test='test string')
 
-    serialized = '{"test_load_dump": "test string", "_type": "test"}'
+    serialized = '{"_type": "test", "test_load_dump": "test string"}'
 
     assert graham.dumps(test).data == serialized
     assert graham.schema(Test).loads(serialized).data == test
