@@ -59,8 +59,6 @@ class Group:
 
 
 def test_overall():
-    graham.register(Group)
-
     # Attempt to recreate the List vs. many=True issues
     #   https://repl.it/KFXo/3
 

@@ -110,13 +110,11 @@ def schemify(tag, **marshmallow_options):
             type=tag,
         )
 
+        marshmallow.class_registry.register(cls.__name__, schema(cls))
+
         return cls
 
     return inner
-
-
-def register(cls):
-    marshmallow.class_registry.register(cls.__name__, schema(cls))
 
 
 # TODO: somehow confuses the schema completely

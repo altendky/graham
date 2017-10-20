@@ -11,7 +11,6 @@ except pkg_resources.DistributionNotFound:
 from graham.core import (
     create_metadata,
     dumps,
-    register,
     schema,
     schemify,
 )
