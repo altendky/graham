@@ -30,12 +30,11 @@ import pkg_resources
 def package_data(project):
     dist_spec = pkg_resources.get_distribution(project)
 
-    metadata_lines = dist_spec.get_metadata_lines('PKG-INFO')
     metadata = {
         k.strip(): v.strip()
         for k, v in (
             kv.split(':', 1)
-            for kv in metadata_lines
+            for kv in dist_spec.get_metadata_lines('PKG-INFO')
         )
     }
 
