@@ -21,6 +21,10 @@ setuptools.setup(
         'marshmallow',
     ],
     extras_require={
+        'docs': [
+            'sphinx',
+            'sphinx-issues'
+        ],
         'tests': [
             'codecov',
             'pytest',
