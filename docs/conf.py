@@ -24,7 +24,10 @@
 
 # -- General configuration ------------------------------------------------
 
+import pathlib
 import pkg_resources
+
+import sphinx.apidoc
 
 
 def package_data(project):
@@ -39,6 +42,26 @@ def package_data(project):
     }
 
     return dist_spec, metadata
+
+
+def run_apidoc(_):
+    # https://github.com/rtfd/readthedocs.org/issues/1139#issuecomment-312626491
+
+    docs_path = pathlib.Path(__file__).parents[0]
+    module_path = docs_path.parents[0] / 'src' / 'graham'
+    apidoc_path = docs_path / 'apidoc'
+
+    sphinx.apidoc.main([
+        '--separate',
+        '--force',
+        '-o', str(apidoc_path),
+        str(module_path),
+    ])
+
+
+def setup(app):
+	app.connect('builder-inited', run_apidoc)
+
 
 # If your documentation needs a minimal Sphinx version, state it here.
 #

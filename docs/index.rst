@@ -10,7 +10,12 @@ graham, making s'mores with attrs and marshmallow
    :maxdepth: 2
    :caption: Contents:
 
+apidoc
+======
+.. toctree::
+    :maxdepth: 2
 
+    apidoc/graham
 
 Indices and tables
 ==================
