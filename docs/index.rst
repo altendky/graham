@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to graham's documentation!
-==================================
+graham, making s'mores with attrs and marshmallow
+=================================================
 
 .. toctree::
    :maxdepth: 2
