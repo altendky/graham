@@ -1,3 +1,4 @@
 -r requirements.txt
+-r requirements.test
 sphinx==1.6.4
 sphinx-issues==0.3.1
