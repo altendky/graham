@@ -7,6 +7,28 @@ import pytest
 import graham
 
 
+def test__():
+    def f(a):
+        a.metadata['a'] = 42
+
+    @attr.s
+    class C:
+        a = attr.ib(metadata={'c': 1})
+        f(a)
+
+    @attr.s
+    class D:
+        a = attr.ib()
+        b = attr.ib()
+
+    print(C.a.metadata)
+    assert len(C.a.metadata) == 2
+    print(D.b.metadata)
+    assert len(D.b.metadata) == 0
+    print(D.a.metadata)
+    assert len(D.a.metadata) == 0
+
+
 def test_missing_metadata():
     with pytest.raises(graham.core.MissingMetadata, match='`test`'):
         @graham.schemify(tag='test')

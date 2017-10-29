@@ -23,38 +23,43 @@ class Leaf:
     )
 
 
-@graham.schemify(tag='group')
+# @graham.schemify(tag='group')
 @attr.s
 class Group:
     name = attr.ib(
         default='<unnamed group>',
-        metadata=graham.create_metadata(
-            field=marshmallow.fields.String()
-        ),
+        # metadata=graham.create_metadata(
+        #     field=marshmallow.fields.String()
+        # ),
     )
+    graham.core.attrib(
+       attribute=name,
+       # field=marshmallow.fields.String(),
+    )
+
     groups = attr.ib(
         default=attr.Factory(list),
-        metadata=graham.create_metadata(
-            field=marshmallow.fields.Nested('self', many=True)
-        ),
+        # metadata=graham.create_metadata(
+        #     field=marshmallow.fields.Nested('self', many=True)
+        # ),
     )
     leaves = attr.ib(
         default=attr.Factory(list),
-        metadata=graham.create_metadata(
-            field=marshmallow.fields.List(
-                marshmallow.fields.Nested(graham.schema(Leaf))
-            ),
-        ),
+        # metadata=graham.create_metadata(
+        #     field=marshmallow.fields.List(
+        #         marshmallow.fields.Nested(graham.schema(Leaf))
+        #     ),
+        # ),
     )
 
     mixed_list = attr.ib(
         default=attr.Factory(list),
-        metadata=graham.create_metadata(
-            field=graham.fields.MixedList(fields=(
-                marshmallow.fields.Nested('Group'),
-                marshmallow.fields.Nested(graham.schema(Leaf)),
-            )),
-        ),
+        # metadata=graham.create_metadata(
+        #     field=graham.fields.MixedList(fields=(
+        #         marshmallow.fields.Nested('Group'),
+        #         marshmallow.fields.Nested(graham.schema(Leaf)),
+        #     )),
+        # ),
     )
 
 
