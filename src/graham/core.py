@@ -29,6 +29,16 @@ class Metadata:
     field = attr.ib()
 
 
+def attrib(attribute, *args, **kwargs):
+    # https://github.com/python-attrs/attrs/issues/278
+    if len(attribute.metadata) == 0:
+        attribute.metadata = {}
+
+    attribute.metadata.update(create_metadata(*args, **kwargs))
+
+    return attribute
+
+
 def create_metadata(*args, **kwargs):
     return {metadata_key: Metadata(*args, **kwargs)}
 
@@ -117,9 +127,3 @@ def schemify(tag, **marshmallow_options):
         return cls
 
     return inner
-
-
-# TODO: somehow confuses the schema completely
-# def attrib(attribute, field):
-#     attribute.metadata[metadata_key] = field
-#     return attribute

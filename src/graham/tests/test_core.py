@@ -24,10 +24,10 @@ def test_dumps():
     @graham.schemify(tag='test')
     @attr.s
     class Test:
-        test = attr.ib(
-            metadata=graham.create_metadata(
-                field=marshmallow.fields.String()
-            ),
+        test = attr.ib()
+        graham.attrib(
+            attribute=test,
+            field=marshmallow.fields.String(),
         )
 
     test = Test(test='test')
@@ -47,10 +47,10 @@ def test_strict():
     @graham.schemify(tag='test', strict=True)
     @attr.s
     class Test:
-        email = attr.ib(
-            metadata=graham.create_metadata(
-                field=marshmallow.fields.Email()
-            ),
+        email = attr.ib()
+        graham.attrib(
+            attribute=email,
+            field=marshmallow.fields.Email(),
         )
 
     with pytest.raises(marshmallow.exceptions.ValidationError):
@@ -61,11 +61,12 @@ def test_nonserialized():
     @graham.schemify(tag='test')
     @attr.s
     class Test:
-        test = attr.ib(
-            metadata=graham.create_metadata(
-                field=marshmallow.fields.String()
-            ),
+        test = attr.ib()
+        graham.attrib(
+            attribute=test,
+            field=marshmallow.fields.String(),
         )
+
         nope = attr.ib(default=None)
 
     test = Test(test='test')
@@ -80,13 +81,13 @@ def test_load_from_dump_to():
     @graham.schemify(tag='test')
     @attr.s
     class Test:
-        test = attr.ib(
-            metadata=graham.create_metadata(
-                field=marshmallow.fields.String(
-                    load_from='test_load_dump',
-                    dump_to='test_load_dump',
-                )
-            ),
+        test = attr.ib()
+        graham.attrib(
+            attribute=test,
+            field=marshmallow.fields.String(
+                load_from='test_load_dump',
+                dump_to='test_load_dump',
+            )
         )
 
     test = Test(test='test string')

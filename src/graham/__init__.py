@@ -9,6 +9,7 @@ except pkg_resources.DistributionNotFound:
 
 
 from graham.core import (
+    attrib,
     create_metadata,
     dumps,
     schema,
