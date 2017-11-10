@@ -12,7 +12,10 @@ import graham.fields
 
 # example and basic test
 
-@graham.schemify(tag='leaf')
+@graham.schemify(
+    tag='leaf',
+    version='6e2f8588-73b2-4d45-a03e-9dbfb584c850',
+)
 @attr.s
 class Leaf:
     name = attr.ib(
@@ -24,7 +27,10 @@ class Leaf:
     )
 
 
-@graham.schemify(tag='group')
+@graham.schemify(
+    tag='group',
+    version='cb66bfae-ba3e-4b68-bbac-fb8cb5a30536',
+)
 @attr.s
 class Group:
     name = attr.ib(

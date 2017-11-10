@@ -18,10 +18,12 @@ class UnmatchedTypeError(Exception):
 class Attributes:
     schema = attr.ib()
     type = attr.ib()
+    version = attr.ib()
 
 
 metadata_key = object()
 type_attribute_name = '_type'
+version_attribute_name = '_version'
 
 
 @attr.s
@@ -43,13 +45,26 @@ def create_metadata(*args, **kwargs):
     return {metadata_key: Metadata(*args, **kwargs)}
 
 
-def create_schema(cls, tag, options):
+def validator(expected):
+    def validate(actual, expected=expected):
+        return actual == expected
+
+    return validate
+
+
+def create_schema(cls, tag, options, version):
     include = collections.OrderedDict()
     include[type_attribute_name] = marshmallow.fields.String(
         default=tag,
         required=True,
-        validate=lambda actual, expected=tag: actual == expected,
+        validate=validator(tag),
     )
+    if version is not None:
+        include[version_attribute_name] = marshmallow.fields.String(
+            default=version,
+            required=True,
+            validate=validator(version),
+        )
 
     for attribute in attr.fields(cls):
         metadata = attribute.metadata.get(metadata_key)
@@ -81,6 +96,8 @@ def create_schema(cls, tag, options):
         @marshmallow.post_load
         def deserialize(self, data):
             del data[type_attribute_name]
+            if cls.__graham_graham__.version is not None:
+                del data[version_attribute_name]
 
             return cls(**data)
 
@@ -89,6 +106,11 @@ def create_schema(cls, tag, options):
         Schema,
         type_attribute_name,
         marshmallow.fields.Constant(constant=tag),
+    )
+    setattr(
+        Schema,
+        version_attribute_name,
+        marshmallow.fields.Constant(constant=version),
     )
 
     return Schema
@@ -106,7 +128,7 @@ def schema(instance):
     return instance.__graham_graham__.schema
 
 
-def schemify(tag, **marshmallow_options):
+def schemify(tag, version=None, **marshmallow_options):
     marshmallow_options.setdefault('ordered', True)
     marshmallow_options.setdefault('strict', True)
 
@@ -115,9 +137,11 @@ def schemify(tag, **marshmallow_options):
             schema=create_schema(
                 cls=cls,
                 tag=tag,
+                version=version,
                 options=marshmallow_options,
             )(),
             type=tag,
+            version=version,
         )
 
         marshmallow.class_registry.register(cls.__name__, schema(cls))

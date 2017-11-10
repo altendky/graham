@@ -8,6 +8,7 @@ import graham
 
 
 type_name = graham.core.type_attribute_name
+version_name = graham.core.version_attribute_name
 
 
 def test_missing_metadata():
@@ -139,3 +140,88 @@ def test_load_missing_tag():
             match=repr(type_name),
     ):
         graham.schema(Test).loads(serialized).data
+
+
+def test_load_wrong_version():
+    tag = 'test'
+    version = 42
+
+    @graham.schemify(tag=tag, version=version)
+    @attr.s
+    class Test:
+        pass
+
+    serialized = '{{"{tag_name}": "{tag}", "{version_name}": {version}}}'
+    serialized = serialized.format(
+        tag_name=type_name,
+        tag=tag,
+        version_name=version_name,
+        version=version + 1,
+    )
+
+    with pytest.raises(
+            marshmallow.exceptions.ValidationError,
+            match=repr(version_name),
+    ):
+        graham.schema(Test).loads(serialized).data
+
+
+def test_load_missing_version():
+    tag = 'test'
+    version = 42
+
+    @graham.schemify(tag=tag, version=version)
+    @attr.s
+    class Test:
+        pass
+
+    serialized = '{{"{tag_name}": "{tag}"}}'
+    serialized = serialized.format(
+        tag_name=type_name,
+        tag=tag,
+    )
+
+    with pytest.raises(
+            marshmallow.exceptions.ValidationError,
+            match=repr(version_name),
+    ):
+        graham.schema(Test).loads(serialized).data
+
+
+def test_dump_no_version():
+    tag = 'test'
+
+    @graham.schemify(tag=tag)
+    @attr.s
+    class Test:
+        pass
+
+    serialized = '{{"{tag_name}": "{tag}"}}'
+    serialized = serialized.format(
+        tag_name=type_name,
+        tag=tag,
+    )
+
+    assert graham.dumps(Test()).data == serialized
+
+
+def test_dump_version():
+    tag = 'test'
+    version = 42
+
+    @graham.schemify(tag=tag, version=version)
+    @attr.s
+    class Test:
+        pass
+
+    serialized = '{{"{tag_name}": "{tag}", "{version_name}": {version}}}'
+    serialized = serialized.format(
+        tag_name=type_name,
+        tag=tag,
+        version_name=version_name,
+        version=version,
+    )
+
+    assert graham.dumps(Test()).data == serialized
+
+
