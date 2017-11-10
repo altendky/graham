@@ -101,3 +101,41 @@ def test_load_from_dump_to():
 
     assert graham.dumps(test).data == serialized
     assert graham.schema(Test).loads(serialized).data == test
+
+
+def test_load_wrong_tag():
+    tag = 'test'
+
+    @graham.schemify(tag=tag)
+    @attr.s
+    class Test:
+        pass
+
+    serialized = '{{"{tag_name}": "{tag}"}}'
+    serialized = serialized.format(
+        tag_name=type_name,
+        tag=tag + '-',
+    )
+
+    with pytest.raises(
+            marshmallow.exceptions.ValidationError,
+            match=repr(type_name),
+    ):
+        graham.schema(Test).loads(serialized).data
+
+
+def test_load_missing_tag():
+    tag = 'test'
+
+    @graham.schemify(tag=tag)
+    @attr.s
+    class Test:
+        pass
+
+    serialized = '{}'
+
+    with pytest.raises(
+            marshmallow.exceptions.ValidationError,
+            match=repr(type_name),
+    ):
+        graham.schema(Test).loads(serialized).data

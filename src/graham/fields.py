@@ -67,8 +67,6 @@ class MixedList(marshmallow.fields.Field):
         type_attribute_name = graham.core.type_attribute_name
 
         return [
-            self.get_cls_or_instance(each[type_attribute_name]).load(
-                graham.utils._dict_strip(each, (type_attribute_name,)),
-            ).data
+            self.get_cls_or_instance(each[type_attribute_name]).load(each).data
             for each in value
         ]

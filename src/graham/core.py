@@ -45,7 +45,11 @@ def create_metadata(*args, **kwargs):
 
 def create_schema(cls, tag, options):
     include = collections.OrderedDict()
-    include[type_attribute_name] = marshmallow.fields.Constant(constant=tag)
+    include[type_attribute_name] = marshmallow.fields.String(
+        default=tag,
+        required=True,
+        validate=lambda actual, expected=tag: actual == expected,
+    )
 
     for attribute in attr.fields(cls):
         metadata = attribute.metadata.get(metadata_key)
@@ -76,17 +80,7 @@ def create_schema(cls, tag, options):
         # TODO: seems like this ought to be a static method
         @marshmallow.post_load
         def deserialize(self, data):
-            type_ = data.pop(type_attribute_name)
-            if type_ != cls.__graham_graham__.type:
-                raise UnmatchedTypeError(
-                    '{class_name}.{attribute_name} should be `{default}` '
-                    'but `{actual}` received'.format(
-                        class_name=type(self).__name__,
-                        attribute_name=type_attribute_name,
-                        default=cls.__graham_graham__.type,
-                        actual=type_,
-                    )
-                )
+            del data[type_attribute_name]
 
             return cls(**data)
 
