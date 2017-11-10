@@ -1,5 +1,7 @@
-import graham.utils
 import marshmallow
+
+import graham.core
+import graham.utils
 
 
 class MixedList(marshmallow.fields.Field):
@@ -39,11 +41,17 @@ class MixedList(marshmallow.fields.Field):
                         else:
                             cls = marshmallow.class_registry.get_class(
                                 nested)
-                            instances[cls._type.constant] = cls
+                            type_ = getattr(
+                                cls,
+                                graham.core.type_attribute_name,
+                            )
+                            instances[type_.constant] = cls
                     else:
-                        instances[nested._type.constant] = nested
+                        type_ = getattr(nested, graham.core.type_attribute_name)
+                        instances[type_.constant] = nested
                 else:
-                    instances[instance._type.constant] = instance
+                    type_ = getattr(instance, graham.core.type_attribute_name)
+                    instances[type_.constant] = instance
 
             self.instances = instances
 

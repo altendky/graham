@@ -7,6 +7,9 @@ import pytest
 import graham
 
 
+type_name = graham.core.type_attribute_name
+
+
 def test_missing_metadata():
     with pytest.raises(graham.core.MissingMetadata, match='`test`'):
         @graham.schemify(tag='test')
@@ -33,14 +36,14 @@ def test_dumps():
     test = Test(test='test')
 
     raw = graham.core.dumps(test).data
-    assert raw == '{"_type": "test", "test": "test"}'
+    assert raw == '{{"{}": "test", "test": "test"}}'.format(type_name)
 
     indented = graham.core.dumps(test, indent=4).data
     assert indented == textwrap.dedent('''\
-    {
-        "_type": "test",
+    {{
+        "{}": "test",
         "test": "test"
-    }''')
+    }}'''.format(type_name))
 
 
 def test_strict():
@@ -71,7 +74,7 @@ def test_nonserialized():
 
     test = Test(test='test')
 
-    serialized = '{"_type": "test", "test": "test"}'
+    serialized = '{{"{}": "test", "test": "test"}}'.format(type_name)
 
     assert graham.dumps(test).data == serialized
     assert graham.schema(Test).loads(serialized).data == test
@@ -92,7 +95,9 @@ def test_load_from_dump_to():
 
     test = Test(test='test string')
 
-    serialized = '{"_type": "test", "test_load_dump": "test string"}'
+    serialized = '{{"{}": "test", "test_load_dump": "test string"}}'.format(
+        type_name,
+    )
 
     assert graham.dumps(test).data == serialized
     assert graham.schema(Test).loads(serialized).data == test
