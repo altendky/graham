@@ -16,6 +16,15 @@ setuptools.setup(
         'Intended Audience :: Developers',
         'Programming Language :: Python :: 3',
     ],
+    entry_points={
+        'console_scripts': [
+            (
+                'graham_update_gitignore'
+                '= graham.cli.updategitignore:cli'
+                '[gitignore]'
+            ),
+        ],
+    },
     install_requires=[
         'attrs',
         'marshmallow',
@@ -30,6 +39,10 @@ setuptools.setup(
             'pytest',
             'pytest-cov',
             'tox',
+        ],
+        'gitignore': [
+            'click',
+            'requests',
         ],
     },
     setup_requires=[

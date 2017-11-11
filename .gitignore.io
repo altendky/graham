@@ -1,0 +1,4 @@
+git
+vim
+python
+pycharm
