@@ -86,8 +86,7 @@ def create_schema(cls, tag, options, version):
             (),
             {
                 'include': include,
-                **options,
-            }
+            }.update(options)
         )
 
         data_class = cls
