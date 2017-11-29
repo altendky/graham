@@ -80,14 +80,14 @@ def create_schema(cls, tag, options, version):
 
         include[attribute.name] = metadata.field
 
+    type_dict = {'include': include}
+    type_dict.update(options)
+
     class Schema(marshmallow.Schema):
         Meta = type(
             'Meta',
             (),
-            {
-                'include': include,
-                **options,
-            }
+            type_dict
         )
 
         data_class = cls
