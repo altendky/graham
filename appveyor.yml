@@ -5,7 +5,6 @@ environment:
     - TOXENV: py27
       PYTHON: "C:\\Python27-x64"
 
-  matrix:
     - TOXENV: py36
       PYTHON: "C:\\Python36-x64"
 
