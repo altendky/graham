@@ -13,6 +13,7 @@ environment:
 
     - TOXENV: py36
       PYTHON: "C:\\Python36-x64"
+      BUILD_WHEEL: 1
 
 init:
   - echo "TOXENV- %TOXENV%"
@@ -26,7 +27,7 @@ install:
   - pip install -r requirements.test
 
 build_script:
-  - python setup.py bdist_wheel
+  - if defined BUILD_WHEEL python setup.py bdist_wheel --universal
 
 test_script:
   - tox
