@@ -22,7 +22,7 @@ install:
   - virtualenv -p "%PYTHON%\\python.exe" "%VENV%"
   - "%VENV%\\Scripts\\activate"
   - pip install .
-  - ps: Update-AppveyorBuild -Version "v$(C:\\Python36-x64\\python -c 'import graham; print(graham.__version__, end=\"\")') b$Env:APPVEYOR_BUILD_NUMBER"
+  - ps: Update-AppveyorBuild -Version "v$(python -c 'import sys; import graham; sys.stdout.write(graham.__version__)') b$Env:APPVEYOR_BUILD_NUMBER"
   - pip install -r requirements.build
   - pip install -r requirements.test
 
