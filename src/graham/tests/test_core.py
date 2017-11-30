@@ -11,23 +11,27 @@ type_name = graham.core.type_attribute_name
 version_name = graham.core.version_attribute_name
 
 
+def rstrip_lines(s):
+    return '\n'.join(line.rstrip() for line in s.splitlines())
+
+
 def test_missing_metadata():
     with pytest.raises(graham.core.MissingMetadata, match='`test`'):
         @graham.schemify(tag='test')
         @attr.s
-        class Test:
+        class Test(object):
             test = attr.ib()
 
     @graham.schemify(tag='test')
     @attr.s
-    class Test:
+    class Test(object):
         test = attr.ib(default=None)
 
 
 def test_dumps():
     @graham.schemify(tag='test')
     @attr.s
-    class Test:
+    class Test(object):
         test = attr.ib()
         graham.attrib(
             attribute=test,
@@ -40,7 +44,7 @@ def test_dumps():
     assert raw == '{{"{}": "test", "test": "test"}}'.format(type_name)
 
     indented = graham.core.dumps(test, indent=4).data
-    assert indented == textwrap.dedent('''\
+    assert rstrip_lines(indented) == textwrap.dedent('''\
     {{
         "{}": "test",
         "test": "test"
@@ -50,7 +54,7 @@ def test_dumps():
 def test_strict():
     @graham.schemify(tag='test', strict=True)
     @attr.s
-    class Test:
+    class Test(object):
         email = attr.ib()
         graham.attrib(
             attribute=email,
@@ -64,7 +68,7 @@ def test_strict():
 def test_nonserialized():
     @graham.schemify(tag='test')
     @attr.s
-    class Test:
+    class Test(object):
         test = attr.ib()
         graham.attrib(
             attribute=test,
@@ -84,7 +88,7 @@ def test_nonserialized():
 def test_load_from_dump_to():
     @graham.schemify(tag='test')
     @attr.s
-    class Test:
+    class Test(object):
         test = attr.ib()
         graham.attrib(
             attribute=test,
@@ -109,7 +113,7 @@ def test_load_wrong_tag():
 
     @graham.schemify(tag=tag)
     @attr.s
-    class Test:
+    class Test(object):
         pass
 
     serialized = '{{"{tag_name}": "{tag}"}}'
@@ -130,7 +134,7 @@ def test_load_missing_tag():
 
     @graham.schemify(tag=tag)
     @attr.s
-    class Test:
+    class Test(object):
         pass
 
     serialized = '{}'
@@ -148,7 +152,7 @@ def test_load_wrong_version():
 
     @graham.schemify(tag=tag, version=version)
     @attr.s
-    class Test:
+    class Test(object):
         pass
 
     serialized = '{{"{tag_name}": "{tag}", "{version_name}": {version}}}'
@@ -172,7 +176,7 @@ def test_load_missing_version():
 
     @graham.schemify(tag=tag, version=version)
     @attr.s
-    class Test:
+    class Test(object):
         pass
 
     serialized = '{{"{tag_name}": "{tag}"}}'
@@ -193,7 +197,7 @@ def test_dump_no_version():
 
     @graham.schemify(tag=tag)
     @attr.s
-    class Test:
+    class Test(object):
         pass
 
     serialized = '{{"{tag_name}": "{tag}"}}'
@@ -211,7 +215,7 @@ def test_dump_version():
 
     @graham.schemify(tag=tag, version=version)
     @attr.s
-    class Test:
+    class Test(object):
         pass
 
     serialized = '{{"{tag_name}": "{tag}", "{version_name}": {version}}}'

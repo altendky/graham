@@ -15,7 +15,7 @@ class UnmatchedTypeError(Exception):
 
 
 @attr.s
-class Attributes:
+class Attributes(object):
     schema = attr.ib()
     type = attr.ib()
     version = attr.ib()
@@ -27,7 +27,7 @@ version_attribute_name = '_version'
 
 
 @attr.s
-class Metadata:
+class Metadata(object):
     field = attr.ib()
 
 

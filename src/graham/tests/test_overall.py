@@ -17,7 +17,7 @@ import graham.fields
     version='6e2f8588-73b2-4d45-a03e-9dbfb584c850',
 )
 @attr.s
-class Leaf:
+class Leaf(object):
     name = attr.ib(
         default='<unnamed leaf>',
     )
@@ -32,7 +32,7 @@ class Leaf:
     version='cb66bfae-ba3e-4b68-bbac-fb8cb5a30536',
 )
 @attr.s
-class Group:
+class Group(object):
     name = attr.ib(
         default='<unnamed group>',
     )

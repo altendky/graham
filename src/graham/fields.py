@@ -7,7 +7,7 @@ import graham.utils
 class MixedList(marshmallow.fields.Field):
     def __init__(self, *args, **kwargs):
         fields = kwargs.pop('fields')
-        super().__init__(*args, **kwargs)
+        super(MixedList, self).__init__(*args, **kwargs)
 
         self.instances = []
 
