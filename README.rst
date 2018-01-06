@@ -17,4 +17,4 @@ Graham, making s'mores with attrs and marshmallow.
 .. |Pythons| image:: https://img.shields.io/pypi/pyversions/graham.svg
 
 .. |Documentation| image:: https://readthedocs.org/projects/graham/badge/?version=latest
-.. _Documentation: http://graham.readthedocs.io/en/latest/?badge=latest
+.. _Documentation: https://graham.readthedocs.io/en/latest/?badge=latest
