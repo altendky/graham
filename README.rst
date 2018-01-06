@@ -1,9 +1,13 @@
 graham
-====
+======
 
 |Travis| |AppVeyor| |codecov| |Pythons| |Documentation|
 
 Graham, making s'mores with attrs and marshmallow.
+
+Well, it's trying to.  This is used in my `parameter management program`_ and is
+intended to become a public use library but fitness for such use can not be
+claimed at this time.
 
 .. |Travis| image:: https://travis-ci.org/altendky/graham.svg
 .. _Travis: https://travis-ci.org/altendky/graham
@@ -18,3 +22,5 @@ Graham, making s'mores with attrs and marshmallow.
 
 .. |Documentation| image:: https://readthedocs.org/projects/graham/badge/?version=latest
 .. _Documentation: https://graham.readthedocs.io/en/latest/?badge=latest
+
+.. _parameter management program: https://github.com/altendky/pm
