@@ -26,6 +26,6 @@ claimed at this time.
 
 .. |Read the Docs| image:: https://readthedocs.org/projects/graham/badge/?version=latest
    :alt: Read the Docs status
-.. _Documentation: https://graham.readthedocs.io/en/latest/?badge=latest
+.. _Read the Docs: https://graham.readthedocs.io/en/latest/?badge=latest
 
 .. _parameter management program: https://github.com/altendky/pm
