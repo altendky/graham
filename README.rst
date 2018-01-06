@@ -1,7 +1,7 @@
 graham
 ======
 
-|Travis| |AppVeyor| |codecov| |Pythons| |Documentation|
+|Travis|_ |AppVeyor|_ |codecov|_ |Pythons| |Documentation|_
 
 Graham, making s'mores with attrs and marshmallow.
 
