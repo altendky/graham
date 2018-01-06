@@ -11,7 +11,10 @@ setuptools.setup(
     long_description=readme,
     author='Kyle Altendorf',
     author_email='sda@fstab.net',
-    url='https://github.com/altendky/graham',
+    project_urls={
+        'Documentation': 'https://graham.readthedocs.io/en/latest',
+        'Source Code': 'https://github.com/altendky/graham',
+    },
     packages=setuptools.find_packages('src'),
     package_dir={'': 'src'},
     classifiers=[
