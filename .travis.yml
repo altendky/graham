@@ -23,3 +23,13 @@ script:
   - python setup.py bdist_wheel
   - tox
   - codecov
+
+deploy:
+  provider: pypi
+  user: altendky
+  password: $PYPI_PASSWORD
+  on:
+    branch: develop
+    tags: true
+    condition: $TRAVIS_PYTHON_VERSION = 3.6
+  distributions: bdist_wheel
