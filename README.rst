@@ -1,7 +1,7 @@
 graham
 ======
 
-|PyPI| |Pythons| |Read the Docs| |Travis| |AppVeyor| |codecov|
+|PyPI| |Pythons| |Read the Docs| |Travis| |AppVeyor| |codecov| |GitHub|
 
 Graham, making s'mores with attrs and marshmallow.
 
@@ -32,5 +32,9 @@ claimed at this time.
 .. |codecov| image:: https://codecov.io/gh/altendky/graham/branch/develop/graph/badge.svg
    :alt: codecov coverage status
    :target: https://codecov.io/gh/altendky/graham
+
+.. |GitHub| image:: https://img.shields.io/github/last-commit/altendky/graham/develop.svg
+   :alt: Source on GitHub
+   :target: https://github.com/altendky/graham
 
 .. _parameter management program: https://github.com/altendky/pm
