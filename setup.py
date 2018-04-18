@@ -9,6 +9,7 @@ setuptools.setup(
     use_scm_version={'version_scheme': 'post-release'},
     description="Graham, making s'mores with attrs and marshmallow.",
     long_description=readme,
+    long_description_content_type='text/x-rst',
     author='Kyle Altendorf',
     author_email='sda@fstab.net',
     url='https://github.com/altendky/graham',
