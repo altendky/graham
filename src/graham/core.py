@@ -130,7 +130,7 @@ def schema(instance):
     return instance.__graham_graham__.schema
 
 
-def schemify(tag, version=None, register=True, **marshmallow_options):
+def schemify(tag, version=None, register=False, **marshmallow_options):
     marshmallow_options.setdefault('ordered', True)
     marshmallow_options.setdefault('strict', True)
 

@@ -30,6 +30,7 @@ class Leaf(object):
 @graham.schemify(
     tag='group',
     version='cb66bfae-ba3e-4b68-bbac-fb8cb5a30536',
+    register=True,
 )
 @attr.s
 class Group(object):
