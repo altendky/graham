@@ -5,8 +5,9 @@ import graham.utils
 
 
 class MixedList(marshmallow.fields.Field):
-    def __init__(self, *args, exclude=(), **kwargs):
+    def __init__(self, *args, **kwargs):
         fields = kwargs.pop('fields')
+        exclude = kwargs.pop('exclude', ())
         super(MixedList, self).__init__(*args, **kwargs)
 
         self.instances = []
