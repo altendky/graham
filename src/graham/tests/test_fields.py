@@ -10,7 +10,7 @@ import graham.fields
 def test_mixed_list_exclude():
     @graham.schemify(tag='a')
     @attr.s
-    class A:
+    class A(object):
         a = attr.ib(
             metadata=graham.create_metadata(
                 field=marshmallow.fields.Integer(),
@@ -18,12 +18,12 @@ def test_mixed_list_exclude():
         )
 
     @attr.s
-    class B:
+    class B(object):
         b = attr.ib()
 
     @graham.schemify(tag='c')
     @attr.s
-    class C:
+    class C(object):
         x = attr.ib(
             metadata=graham.create_metadata(
                 field=graham.fields.MixedList(
