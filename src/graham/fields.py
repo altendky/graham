@@ -5,11 +5,12 @@ import graham.utils
 
 
 class MixedList(marshmallow.fields.Field):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, exclude=(), **kwargs):
         fields = kwargs.pop('fields')
         super(MixedList, self).__init__(*args, **kwargs)
 
         self.instances = []
+        self.exclude = exclude
 
         for cls_or_instance in fields:
             if isinstance(cls_or_instance, type):
@@ -61,7 +62,11 @@ class MixedList(marshmallow.fields.Field):
         return self.instances[cls_or_instance]
 
     def _serialize(self, value, attr, obj):
-        return [graham.core.dump(each).data for each in value]
+        return [
+            graham.core.dump(each).data
+            for each in value
+            if not isinstance(each, self.exclude)
+        ]
 
     def _deserialize(self, value, attr, data):
         type_attribute_name = graham.core.type_attribute_name
