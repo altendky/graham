@@ -52,7 +52,7 @@ def validator(expected):
     return validate
 
 
-def create_schema(cls, tag, options, version):
+def create_schema(cls, tag, options, version, done):
     include = collections.OrderedDict()
     include[type_attribute_name] = marshmallow.fields.String(
         default=tag,
@@ -101,7 +101,13 @@ def create_schema(cls, tag, options, version):
             if cls.__graham_graham__.version is not None:
                 del data[version_attribute_name]
 
-            return cls(**data)
+            o = cls(**data)
+            if done is not None:
+                m = getattr(o, done, None)
+                if m is not None:
+                    m()
+
+            return o
 
     Schema.__name__ = cls.__name__ + 'Schema'
     setattr(
@@ -130,7 +136,13 @@ def schema(instance):
     return instance.__graham_graham__.schema
 
 
-def schemify(tag, version=None, register=False, **marshmallow_options):
+def schemify(
+        tag,
+        version=None,
+        register=False,
+        done=None,
+        **marshmallow_options,
+):
     marshmallow_options.setdefault('ordered', True)
     marshmallow_options.setdefault('strict', True)
 
@@ -141,6 +153,7 @@ def schemify(tag, version=None, register=False, **marshmallow_options):
                 tag=tag,
                 version=version,
                 options=marshmallow_options,
+                done=done,
             )(),
             type=tag,
             version=version,

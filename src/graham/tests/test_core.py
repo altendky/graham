@@ -229,3 +229,33 @@ def test_dump_version():
     assert graham.dumps(Test()).data == serialized
 
 
+def test_done():
+    tag = 'test'
+    expected = 42
+
+    result = []
+
+    @graham.schemify(tag=tag, done='done')
+    @attr.s
+    class Test(object):
+        a = attr.ib()
+        graham.attrib(
+            attribute=a,
+            field=marshmallow.fields.Integer()
+        )
+
+        def done(self):
+            result.append(self.a)
+
+    serialized = '{{"{tag_name}": "{tag}", "a": {expected}}}'
+    serialized = serialized.format(
+        tag_name=type_name,
+        tag=tag,
+        expected=expected,
+    )
+
+    graham.schema(Test).loads(serialized)
+
+    result, = result
+
+    assert result == expected
