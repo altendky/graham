@@ -141,7 +141,7 @@ def schemify(
         version=None,
         register=False,
         done=None,
-        **marshmallow_options,
+        **marshmallow_options#, python<3.6 can't handle this `**x,`...
 ):
     marshmallow_options.setdefault('ordered', True)
     marshmallow_options.setdefault('strict', True)
