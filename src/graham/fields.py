@@ -4,6 +4,12 @@ import graham.core
 import graham.utils
 
 
+class Tuple(marshmallow.fields.List):
+    def _deserialize(self, value, attr=None, data=None):
+        result = super()._deserialize(value, attr, data)
+        return tuple(result)
+
+
 class MixedList(marshmallow.fields.Field):
     def __init__(self, *args, **kwargs):
         fields = kwargs.pop('fields')
