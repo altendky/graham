@@ -1,2 +1,0 @@
--r requirements.txt
-wheel==0.30.0

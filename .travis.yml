@@ -16,11 +16,10 @@ addons:
 
 install:
   - pip install tox-travis
-  - python -m pip install -r requirements.build
-  - python -m pip install -r requirements.test
+  - python boots.py create --group package
 
 script:
-  - python setup.py bdist_wheel
+  - python boots.py build
   - tox
   - codecov
 

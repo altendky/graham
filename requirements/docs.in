@@ -1,0 +1,4 @@
+--requirement test.in
+
+sphinx==1.6.4
+sphinx-issues==0.3.1
