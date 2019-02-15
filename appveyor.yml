@@ -19,15 +19,11 @@ init:
   - echo "TOXENV- %TOXENV%"
 
 install:
-  - virtualenv -p "%PYTHON%\\python.exe" "%VENV%"
-  - "%VENV%\\Scripts\\activate"
-  - pip install .
+  - py boots.py create --group package
   - ps: Update-AppveyorBuild -Version "v$(python -c 'import sys; import graham; sys.stdout.write(graham.__version__)') b$Env:APPVEYOR_BUILD_NUMBER"
-  - pip install -r requirements.build
-  - pip install -r requirements.test
 
 build_script:
-  - if defined BUILD_WHEEL python setup.py bdist_wheel --universal
+  - if defined BUILD_WHEEL python boots.py build
 
 test_script:
   - tox
