@@ -1,6 +1,6 @@
 language: python
 
-sudo: false
+dist: xenial
 
 python:
   - 2.7
@@ -15,13 +15,13 @@ addons:
       - $(ls $TRAVIS_BUILD_DIR/dist/*.whl | tr "\n" ":")
 
 install:
-  - pip install tox-travis
   - python boots.py create --group package
+  - python boots.py pick --group package
 
 script:
   - python boots.py build
-  - tox
-  - codecov
+  - venv/bin/tox
+  - venv/bin/codecov
 
 deploy:
   provider: pypi

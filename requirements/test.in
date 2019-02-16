@@ -1,0 +1,5 @@
+--requirement base.in
+
+codecov==2.0.15
+tox==3.7.0
+tox-travis==0.11
