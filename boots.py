@@ -497,9 +497,9 @@ def pick(destination, group, configuration):
         configuration=configuration,
     )
 
-    print('source', source)
-    print('destination', destination)
-    # shutil.copyfile(source, destination)
+    print('     source: ' + source)
+    print('destination: ' + destination)
+    shutil.copyfile(source, destination)
 
 
 def add_group_option(parser, default):
