@@ -268,9 +268,10 @@ def sync_requirements_file(env, requirements, configuration):
 
 def linux_create(group, configuration):
     venv_bin = os.path.join(configuration.venv_path, 'bin')
+    python_path, = configuration.python_identifier.linux_command()
     common_create(
         group=group,
-        python='python3.7',
+        python=python_path,
         venv_bin=venv_bin,
         symlink=True,
         configuration=configuration,
@@ -279,9 +280,7 @@ def linux_create(group, configuration):
 
 def windows_create(group, configuration):
     python_path = check_output(
-        [
-            'py',
-            '-3.7-32',
+        configuration.python_identifier.windows_command() + [
             '-c', 'import sys; print(sys.executable)',
         ],
         cwd=configuration.project_root,
@@ -491,6 +490,18 @@ def publish(force, configuration):
     )
 
 
+def pick(destination, group, configuration):
+    source = build_requirements_path(
+        group=group,
+        stage=requirements_lock,
+        configuration=configuration,
+    )
+
+    print('source', source)
+    print('destination', destination)
+    # shutil.copyfile(source, destination)
+
+
 def add_group_option(parser, default):
     parser.add_argument(
         '--group',
@@ -510,9 +521,61 @@ def add_subparser(subparser, *args, **kwargs):
     )
 
 
+class PythonIdentifier:
+    def __init__(self, version, bit_width):
+        self.version = version
+        self.bit_width = bit_width
+
+    @classmethod
+    def from_string(cls, identifier_string):
+        bit_split = '-'
+
+        version_string, split, bit_width = identifier_string.rpartition(bit_split)
+
+        if split == bit_split:
+            bit_width = int(bit_width)
+        else:
+            bit_width = None
+
+        version_string = version_string.strip()
+        if version_string == '':
+            version = ()
+        else:
+            split_version = version_string.split('.')
+            if len(split_version) > 0:
+                version = tuple(int(v) for v in split_version)
+            else:
+                version = ()
+
+        return cls(version=version, bit_width=bit_width)
+
+    def dotted_version(self, places):
+        return '.'.join(str(v) for v in self.version[:places])
+
+    def linux_command(self):
+        command = 'python'
+        command += self.dotted_version(places=2)
+
+        return [command]
+
+    def windows_command(self):
+        command = ['py']
+
+        if len(self.version) > 0:
+            version = '-' + self.dotted_version(places=2)
+
+            if self.bit_width is not None:
+                version += '-' + str(self.bit_width)
+
+            command.append(version)
+
+        return command
+
+
 class Configuration:
     configuration_defaults = {
         'project_root': '',
+        'python_identifier': '',
         'default_group': 'base',
         'pre_group': 'pre',
         'requirements_path': 'requirements',
@@ -532,6 +595,7 @@ class Configuration:
     def __init__(
             self,
             project_root,
+            python_identifier,
             default_group,
             pre_group,
             requirements_path,
@@ -546,6 +610,7 @@ class Configuration:
             platform,
     ):
         self.project_root = project_root
+        self.python_identifier = python_identifier
         self.default_group = default_group
         self.pre_group = pre_group
         self.requirements_path = requirements_path
@@ -582,6 +647,10 @@ class Configuration:
         c['project_root'] = resolve_path(reference_path, c['project_root'])
         c.update(d)
 
+        python_identifier = PythonIdentifier.from_string(
+            identifier_string=c['python_identifier'],
+        )
+
         venv_path = resolve_path(
             reference_path,
             c['venv_path'],
@@ -608,6 +677,7 @@ class Configuration:
 
         return cls(
             project_root=project_root,
+            python_identifier=python_identifier,
             default_group=c['default_group'],
             pre_group=c['pre_group'],
             requirements_path=resolve_path(
@@ -727,6 +797,22 @@ def main():
         help='Ignore the check for being on a tag',
     )
     publish_parser.set_defaults(func=publish)
+
+    pick_parser = add_subparser(
+        subparsers,
+        'pick',
+        description='Copy the presently applicable lock file',
+    )
+    pick_parser.add_argument(
+        '--destination',
+        default=resolve_path(
+            configuration.requirements_path,
+            'picked' + requirements_extensions[requirements_lock],
+        ),
+        help='The path to copy the picked lock file to',
+    )
+    add_group_option(parser=pick_parser, default=configuration.default_group)
+    pick_parser.set_defaults(func=pick)
 
     args = parser.parse_args()
 
