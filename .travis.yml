@@ -15,6 +15,7 @@ addons:
       - $(ls $TRAVIS_BUILD_DIR/dist/*.whl | tr "\n" ":")
 
 install:
+  - cat requirements/pre.linux.txt
   - python boots.py create --group package
   - python boots.py pick --group package
 
