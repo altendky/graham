@@ -37,7 +37,7 @@ setuptools.setup(
     },
     install_requires=[
         'attrs',
-        'marshmallow',
+        'marshmallow<3',
     ],
     extras_require={
         'docs': [
